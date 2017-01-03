@@ -17,44 +17,50 @@ def test_campaign_item(driver):
     assert "Online Store" in driver.title
     campaign_duck = driver.find_element_by_css_selector("#box-campaigns li.product.column")
     duck_name = campaign_duck.find_element_by_css_selector(".name").text
-    duck_regular_price = campaign_duck.find_element_by_css_selector(".regular-price").text
-    duck_special_price = campaign_duck.find_element_by_css_selector(".campaign-price").text
+    duck_regular_price = campaign_duck.find_element_by_css_selector(".regular-price")
+    duck_special_price = campaign_duck.find_element_by_css_selector(".campaign-price")
+    duck_regular_price_txt = duck_regular_price.text
+    duck_special_price_txt = duck_special_price.text
+
     #css_style_properties
-    campaign_price_main_page_color = campaign_duck.find_element_by_css_selector(".campaign-price").value_of_css_property("color")
-    campaign_price_main_page_textdec = campaign_duck.find_element_by_css_selector(".campaign-price").value_of_css_property("text-decoration")
-    campaign_price_main_page_fontsize = campaign_duck.find_element_by_css_selector(".campaign-price").value_of_css_property("font-size")
-    regular_price_main_page_color = campaign_duck.find_element_by_css_selector(".regular-price").value_of_css_property("color")
-    regular_price_main_page_textdec = campaign_duck.find_element_by_css_selector(".regular-price").value_of_css_property("text-decoration")
-    regular_price_main_page_fontsize = campaign_duck.find_element_by_css_selector(".regular-price").value_of_css_property("font-size")
+    campaign_price_main_page_color = duck_special_price.value_of_css_property("color")
+    campaign_price_main_page_textdec = duck_special_price.value_of_css_property("text-decoration")
+    campaign_price_main_page_fontsize = duck_special_price.value_of_css_property("font-size")
+    campaign_price_main_page_fontsize = campaign_price_main_page_fontsize[:-2]
+    regular_price_main_page_color = duck_regular_price.value_of_css_property("color")
+    regular_price_main_page_textdec = duck_regular_price.value_of_css_property("text-decoration")
+    regular_price_main_page_fontsize = duck_regular_price.value_of_css_property("font-size")
+    regular_price_main_page_fontsize = regular_price_main_page_fontsize[:-2]
+
+    #opening duck page
     campaign_duck.click()
     campaign_duck_page = driver.find_element_by_css_selector("#box-product")
     campaign_duck_name = campaign_duck_page.find_element_by_css_selector(".title").text
-    campaign_duck_regular_price = campaign_duck_page.find_element_by_css_selector(".regular-price").text
-    campaign_duck_special_price = campaign_duck_page.find_element_by_css_selector(".campaign-price").text
-    # css_style_properties
-    campaign_price_duck_page_color = campaign_duck_page.find_element_by_css_selector(
-        ".campaign-price").value_of_css_property("color")
-    campaign_price_duck_page_textdec = campaign_duck_page.find_element_by_css_selector(
-        ".campaign-price").value_of_css_property("text-decoration")
-    campaign_price_duck_page_fontsize = campaign_duck_page.find_element_by_css_selector(
-        ".campaign-price").value_of_css_property("font-size")
-    regular_price_duck_page_color = campaign_duck_page.find_element_by_css_selector(".regular-price").value_of_css_property(
-        "color")
-    regular_price_duck_page_textdec = campaign_duck_page.find_element_by_css_selector(
-        ".regular-price").value_of_css_property("text-decoration")
-    regular_price_duck_page_fontsize = campaign_duck_page.find_element_by_css_selector(
-        ".regular-price").value_of_css_property("font-size")
-    assert duck_name == campaign_duck_name
-    assert duck_regular_price == campaign_duck_regular_price
-    assert duck_special_price == campaign_duck_special_price
+    campaign_duck_regular_price = campaign_duck_page.find_element_by_css_selector(".regular-price")
+    campaign_duck_special_price = campaign_duck_page.find_element_by_css_selector(".campaign-price")
+    campaign_duck_regular_price_txt = campaign_duck_regular_price.text
+    campaign_duck_special_price_txt = campaign_duck_special_price.text
 
-    #asserts following below don't make too much sense, because prices belong to certain tags and classes, which have
-    # specifically assigned styles anyway
-    #meaning that selecting elements by the tag and/or class name already provides for checking if they have appropriate
-    #style. So we can only check if it's red, striked/not striked text
-    assert campaign_price_duck_page_color == campaign_price_main_page_color
-    #assert campaign_price_duck_page_fontsize == campaign_price_main_page_fontsize <- will fail, main page has different fonsize
-    assert campaign_price_duck_page_textdec == campaign_price_main_page_textdec
-    #assert regular_price_duck_page_color == regular_price_main_page_color <- will fail, main page has slightly different color
-    #assert regular_price_duck_page_fontsize == regular_price_main_page_fontsize <-will fail, main page has different fonsize
-    assert regular_price_duck_page_textdec == regular_price_main_page_textdec
+    #css_style_properties
+    campaign_price_duck_page_color = campaign_duck_special_price.value_of_css_property("color")
+    campaign_price_duck_page_textdec = campaign_duck_special_price.value_of_css_property("text-decoration")
+    campaign_price_duck_page_fontsize = campaign_duck_special_price.value_of_css_property("font-size")
+    campaign_price_duck_page_fontsize = campaign_price_duck_page_fontsize[:-2]
+    regular_price_duck_page_color = campaign_duck_regular_price.value_of_css_property("color")
+    regular_price_duck_page_textdec = campaign_duck_regular_price.value_of_css_property("text-decoration")
+    regular_price_duck_page_fontsize = campaign_duck_regular_price.value_of_css_property("font-size")
+    regular_price_duck_page_fontsize = regular_price_duck_page_fontsize[:-2]
+
+    #verifying item name and prices
+    assert duck_name == campaign_duck_name
+    assert duck_regular_price_txt == campaign_duck_regular_price_txt
+    assert duck_special_price_txt == campaign_duck_special_price_txt
+
+    #css style asserts
+    assert regular_price_main_page_color != campaign_price_main_page_color
+    assert regular_price_main_page_textdec != campaign_price_main_page_textdec
+    assert int(float(regular_price_main_page_fontsize)) < int(float(campaign_price_main_page_fontsize))
+    assert regular_price_duck_page_color != campaign_price_duck_page_color
+    assert regular_price_duck_page_textdec != campaign_price_duck_page_textdec
+    assert int(float(regular_price_duck_page_fontsize)) < int(float(campaign_price_duck_page_fontsize))
+
