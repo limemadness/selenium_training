@@ -2,6 +2,8 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
+from random import choice
+from string import ascii_lowercase
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -32,8 +34,9 @@ def test_new_customer(driver):
     driver.find_element_by_name("postcode").send_keys("94103")
     driver.find_element_by_name("city").clear()
     driver.find_element_by_name("city").send_keys("Cheliabinsk")
+    new_email = "lime" + ''.join(choice(ascii_lowercase) for i in range(10)) + "@mail.ru"
     driver.find_element_by_name("email").clear()
-    driver.find_element_by_name("email").send_keys("limemail4@ya.ru")
+    driver.find_element_by_name("email").send_keys(new_email)
     driver.find_element_by_name("phone").clear()
     driver.find_element_by_name("phone").send_keys("+7919999999")
     driver.find_element_by_name("password").clear()
@@ -42,7 +45,7 @@ def test_new_customer(driver):
     driver.find_element_by_name("confirmed_password").send_keys("654321")
     driver.find_element_by_name("create_account").click()
     # have to do it this way cause otherwise Zones are not active
-    Select(driver.find_element_by_name("zone_code")).select_by_visible_text("California")
+    Select(driver.find_element_by_css_selector("tr:nth-child(5) td:nth-child(2) select")).select_by_visible_text("California")
     driver.find_element_by_name("password").clear()
     driver.find_element_by_name("password").send_keys("654321")
     driver.find_element_by_name("confirmed_password").clear()
@@ -51,10 +54,9 @@ def test_new_customer(driver):
     #logout
     driver.find_element_by_link_text("Logout").click()
 
-def test_customer_credentials(driver):
     #user credentials aka email, password
     driver.find_element_by_name("email").clear()
-    driver.find_element_by_name("email").send_keys("limemail4@ya.ru")
+    driver.find_element_by_name("email").send_keys(new_email)
     driver.find_element_by_name("password").clear()
     driver.find_element_by_name("password").send_keys("654321")
     driver.find_element_by_name("login").click()
